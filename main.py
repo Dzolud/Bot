@@ -144,7 +144,7 @@ def string_answer(message):
 
     bot.register_next_step_handler(r, is_bookmark, message)
 
-
+#adcshcuisjic
 def rr(message):
     try:
         ny = wikipedia.page(message.text)
