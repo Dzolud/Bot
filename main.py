@@ -51,13 +51,13 @@ def func(message):
             bot.register_next_step_handler(r, login_check, profil)
 
     if message.text == "Цифры":
-        r = bot.send_message(message.chat.id, text="Напиши цифру")
+        r = bot.send_message(message.chat.id, text="Напиши цифру", reply_markup=None)
         bot.register_next_step_handler(r, answer_number)
     if message.text == "Слова":
-        r = bot.send_message(message.chat.id, text="Напиши слово")
+        r = bot.send_message(message.chat.id, text="Напиши слово", reply_markup=None)
         bot.register_next_step_handler(r, string_answer)
     if message.text == "Фильмы":
-        r = bot.send_message(message.chat.id, text="Напиши фильм")
+        r = bot.send_message(message.chat.id, text="Напиши фильм", reply_markup=None)
         bot.register_next_step_handler(r, film_answer)
 
 
@@ -111,10 +111,10 @@ def answer_number(message):
                                                f""
                                                f""
                                                f""
-                         )
+                         , reply_markup=markup)
         bot.register_next_step_handler(r, is_bookmark, message)
     else:
-        r = bot.send_message(message.chat.id, text='Неправильный формат ввода')
+        r = bot.send_message(message.chat.id, text='Неправильный формат ввода', reply_markup=markup)
         bot.register_next_step_handler(r, is_bookmark, message)
 
 
@@ -143,7 +143,7 @@ def string_answer(message):
                                            f"Залог:{p.tag.voice}\n"
                                            f"\n"
                                            f"\n"
-                                           f"{rr(message)}")
+                                           f"{rr(message)}", reply_markup=markup)
 
     bot.register_next_step_handler(r, is_bookmark, message)
 
@@ -211,7 +211,7 @@ def film_answer(message):
                                                f"Длина фильма: {re['films'][0]['filmLength']}\n"
                                                f"Страна Производства: {ff}\n"
                                                f"Жанр: {f}\n"
-                                               f"Рэйтинг: {re['films'][0]['rating']}\n")
+                                               f"Рэйтинг: {re['films'][0]['rating']}\n", reply_markup=markup)
     bot.register_next_step_handler(r, is_bookmark, message)
 
 
