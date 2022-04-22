@@ -21,9 +21,6 @@ db_session.global_init("db/users.db")
 
 bot = telebot.TeleBot('5385406247:AAGCPE_X1JOqoh0k6PbhAcHXR-NOkuFyO7c')
 
-photo = open('data\potato.gif', 'rb')
-
-
 
 @bot.message_handler(commands=["start"])
 def start(message, res=False):
