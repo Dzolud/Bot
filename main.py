@@ -241,4 +241,14 @@ def check_profils(login, password):
     return False
 
 
+def get_bookmarks(login):
+    db_sess = db_session.create_session()
+    return [data.request for data in db_sess.query(Bookmarks).filter(Bookmarks.chat_id == db_sess.query(Profile).filter(Profile.login == login).first().chat_id).all()]
+
+
+def get_history(login):
+    db_sess = db_session.create_session()
+    return [data.request for data in db_sess.query(History).filter(History.chat_id == db_sess.query(Profile).filter(Profile.login == login).first().chat_id).all()]
+
+
 bot.polling(none_stop=True, interval=0)
