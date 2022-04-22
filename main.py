@@ -8,6 +8,8 @@ from data.profils import Profile
 from data.search_history import History
 from data.bookmark import Bookmarks
 import requests
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 morph = pymorphy2.MorphAnalyzer()
@@ -30,7 +32,7 @@ def start(message, res=False):
     markup_registration.add(btn_r)
 
     print(message.chat.id)
-    bot.send_animation(message.chat.id, photo, caption='Я на связи. Напиши мне что-нибудь )', reply_markup=markup_registration)
+    bot.send_message(message.chat.id, 'Я на связи. Напиши мне что-нибудь )', reply_markup=markup_registration)
 
 
 
@@ -231,5 +233,15 @@ def is_prime(n):
             return 'Составное'
         i += 1
     return 'Простое'
+
+
+def check_profils(login, password):
+    db_sess = db_session.create_session()
+    if login in [prof.login for prof in db_sess.query(Profile).all()]:
+        if check_password_hash(db_sess.query(Profile).filter(Profile.login == login).first().hashed_password, password):
+            return True
+        return False
+    return False
+
 
 bot.polling(none_stop=True, interval=0)
