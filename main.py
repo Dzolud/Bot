@@ -38,8 +38,11 @@ btn1 = types.KeyboardButton("Цифры")
 btn2 = types.KeyboardButton("Слова")
 btn3 = types.KeyboardButton("Фильмы")
 btn4 = types.KeyboardButton("Добавить в закладки")
+btn5 = types.KeyboardButton("Посмотреть историю")
+btn6 = types.KeyboardButton("Посмотерть закладки")
 markup.add(btn1, btn2, btn3,
-           btn4)
+           btn4,
+           btn5, btn6)
 
 @bot.message_handler(content_types=["text"])
 def func(message):
@@ -62,6 +65,10 @@ def func(message):
     if message.text == "Фильмы":
         r = bot.send_message(message.chat.id, text="Напиши фильм", reply_markup=None)
         bot.register_next_step_handler(r, film_answer)
+    if message.text == "Посмотреть историю":
+        bot.send_message(message.chat.id, text='Ваша история:\n' + ',\n'.join(history_list(message.chat.id)))
+    if message.text == "Посмотерть закладки":
+        bot.send_message(message.chat.id, text='Ваши закладки:\n' + ',\n'.join(bookmarks_list(message.chat.id)))
 
 
 
@@ -239,6 +246,16 @@ def check_profils(login, password):
             return True
         return False
     return False
+
+
+def bookmarks_list(chat_id):
+    db_sess = db_session.create_session()
+    return [data.request for data in db_sess.query(Bookmarks).filter(Bookmarks.chat_id == chat_id).all()]
+
+
+def history_list(chat_id):
+    db_sess = db_session.create_session()
+    return [data.request for data in db_sess.query(History).filter(History.chat_id == chat_id).all()]
 
 
 def get_bookmarks(login):
