@@ -56,6 +56,9 @@ def func(message):
     if message.text == "Слова":
         r = bot.send_message(message.chat.id, text="Напиши слово")
         bot.register_next_step_handler(r, string_answer)
+    if message.text == "Фильмы":
+        r = bot.send_message(message.chat.id, text="Напиши фильм")
+        bot.register_next_step_handler(r, film_answer)
 
 
 
@@ -178,6 +181,16 @@ def is_bookmark(message, content):
         func(message)
 
 def film_answer(message):
+
+
+    history = History()
+    history.chat_id = message.chat.id
+    history.request = message.text
+    db_sess = db_session.create_session()
+    db_sess.add(history)
+    db_sess.commit()
+
+
     response = requests.get(
         f'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword={message.text}&page=1',
         headers={'X-API-KEY': "7f118a01-f5a2-4b10-b7ea-85463dff50e2"
@@ -190,15 +203,16 @@ def film_answer(message):
     out.write(p.content)
     out.close()
     q = open("img.jpg", "rb")
-    r = ", ".join(i['genre'].capitalize() for i in re['films'][0]['genres'])
-    rr = ", ".join(i['country'] for i in re['films'][0]['countries'])
-    bot.send_photo(message.chat.id, q, caption=f"Название: {re['films'][0]['nameRu']}\n"
+    f = ", ".join(i['genre'].capitalize() for i in re['films'][0]['genres'])
+    ff = ", ".join(i['country'] for i in re['films'][0]['countries'])
+    r = bot.send_photo(message.chat.id, q, caption=f"Название: {re['films'][0]['nameRu']}\n"
                                                f"Название на Аглийском: {re['films'][0]['nameEn']}\n"
                                                f"Описание: {re['films'][0]['description']}\n"
                                                f"Длина фильма: {re['films'][0]['filmLength']}\n"
-                                               f"Страна Производства: {rr}\n"
-                                               f"Жанр: {r}\n"
+                                               f"Страна Производства: {ff}\n"
+                                               f"Жанр: {f}\n"
                                                f"Рэйтинг: {re['films'][0]['rating']}\n")
+    bot.register_next_step_handler(r, is_bookmark, message)
 
 
 def is_prime(n):
