@@ -19,6 +19,9 @@ db_session.global_init("db/users.db")
 
 bot = telebot.TeleBot('5385406247:AAGCPE_X1JOqoh0k6PbhAcHXR-NOkuFyO7c')
 
+photo = open('data\potato.gif', 'rb')
+
+
 
 @bot.message_handler(commands=["start"])
 def start(message, res=False):
@@ -27,8 +30,9 @@ def start(message, res=False):
     markup_registration.add(btn_r)
 
     print(message.chat.id)
+    bot.send_animation(message.chat.id, photo, caption='Я на связи. Напиши мне что-нибудь )', reply_markup=markup_registration)
 
-    bot.send_message(message.chat.id, 'Я на связи. Напиши мне что-нибудь )', reply_markup=markup_registration)
+
 
 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
 btn1 = types.KeyboardButton("Цифры")
